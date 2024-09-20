@@ -9,7 +9,7 @@ services:
       target: dev
     depends_on:
       redis:
-        condition: service_healthy
+        condition: service_started
     volumes:
      - ./vote:/usr/local/app
     ports:
@@ -24,7 +24,7 @@ services:
     entrypoint: nodemon --inspect=0.0.0.0 server.js
     depends_on:
       db:
-        condition: service_healthy 
+        condition: service_started 
     volumes:
       - ./result:/usr/local/app
     ports:
@@ -39,9 +39,9 @@ services:
       context: ./worker
     depends_on:
       redis:
-        condition: service_healthy 
+        condition: service_started 
       db:
-        condition: service_healthy 
+        condition: service_started 
     networks:
       - back-tier
 
@@ -71,7 +71,7 @@ services:
     profiles: ["seed"]
     depends_on:
       vote:
-        condition: service_healthy 
+        condition: service_started 
     networks:
       - front-tier
     restart: "no"
