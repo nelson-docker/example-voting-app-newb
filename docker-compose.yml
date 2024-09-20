@@ -10,6 +10,12 @@ services:
     depends_on:
       redis:
         condition: service_started
+    healthcheck: 
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     volumes:
      - ./vote:/usr/local/app
     ports:
@@ -49,6 +55,9 @@ services:
     image: redis:alpine
     volumes:
       - "./healthchecks:/healthchecks"
+    healthcheck:
+      test: /healthchecks/redis.sh
+      interval: "5s"
     networks:
       - back-tier
 
@@ -60,6 +69,9 @@ services:
     volumes:
       - "db-data:/var/lib/postgresql/data"
       - "./healthchecks:/healthchecks"
+    healthcheck:
+      test: /healthchecks/postgres.sh
+      interval: "5s"
     networks:
       - back-tier
 
